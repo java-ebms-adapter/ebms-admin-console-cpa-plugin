@@ -2,7 +2,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/">
 <body>
 <wicket:extend>
-
+	<form role="form">
+		<div class="form-group">
+			<label class="control-label"><wicket:message key="lbl.name"/></label>
+			<p class="form-control-static"><wicket:container wicket:id="name"/></p>
+		</div>
+		<div class="form-group">
+			<label class="control-label"><wicket:message key="lbl.cpaTemplate"/></label>
+			<span><textarea class="form-control" rows="40" wicket:id="cpaTemplate"/></span>
+		</div>
+		<div class="form-group">
+			<a class="btn btn-default" href="#" wicket:id="back"><wicket:message key="cmd.back"/></a>
+		</div>
+	</form>
 </wicket:extend>
 </body>
 </html>

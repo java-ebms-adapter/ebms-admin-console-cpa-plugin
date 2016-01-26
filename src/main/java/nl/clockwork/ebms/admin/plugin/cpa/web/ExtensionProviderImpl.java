@@ -18,12 +18,26 @@ package nl.clockwork.ebms.admin.plugin.cpa.web;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.clockwork.ebms.admin.web.ExtensionPageProvider;
+import nl.clockwork.ebms.admin.web.ExtensionProvider;
 import nl.clockwork.ebms.admin.web.menu.MenuItem;
 import nl.clockwork.ebms.admin.web.menu.MenuLinkItem;
 
-public class ExtensionPageProviderImpl extends ExtensionPageProvider
+public class ExtensionProviderImpl extends ExtensionProvider
 {
+
+	@Override
+	public String getSpringConfigurationFile()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getHSQLDBFile()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	@Override
 	public List<MenuItem> getMenuItems()

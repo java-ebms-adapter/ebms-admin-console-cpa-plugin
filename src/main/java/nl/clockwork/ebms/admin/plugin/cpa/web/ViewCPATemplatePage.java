@@ -30,9 +30,9 @@ public class ViewCPATemplatePage extends BasePage
 	public ViewCPATemplatePage(CPATemplate cpaTemplate, final ViewCPATemplatesPage responsePage)
 	{
 		add(new Label("name",cpaTemplate.getName()));
-		TextArea<String> cpa_ = new TextArea<String>("cpaTemplate",Model.of(cpaTemplate.getContent()));
-		cpa_.setEnabled(false);
-		add(cpa_);
+		TextArea<String> cpaTemplate_ = new TextArea<String>("cpaTemplate",Model.of(cpaTemplate.getContent()));
+		cpaTemplate_.setEnabled(false);
+		add(cpaTemplate_);
 		add(new Link<Void>("back")
 		{
 			private static final long serialVersionUID = 1L;
