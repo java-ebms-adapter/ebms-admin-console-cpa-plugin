@@ -1,8 +1,8 @@
 CREATE TABLE cpa_template
 (
-	id						INT						NOT NULL PRIMARY KEY,
-	name					VARCHAR(256)	NOT NULL UNIQUE,
-	cpa_template	CLOB					NOT NULL
+	id			INT						NOT NULL PRIMARY KEY,
+	name		VARCHAR(256)	NOT NULL UNIQUE,
+	content	CLOB					NOT NULL
 );
 
 CREATE TABLE cpa_element
