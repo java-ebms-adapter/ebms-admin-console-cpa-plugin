@@ -15,11 +15,74 @@
  */
 package nl.clockwork.ebms.admin.plugin.cpa.web;
 
+import nl.clockwork.ebms.admin.plugin.cpa.dao.CPAPluginDAO;
+import nl.clockwork.ebms.admin.plugin.cpa.model.CPATemplate;
 import nl.clockwork.ebms.admin.web.BasePage;
+import nl.clockwork.ebms.admin.web.cpa.CPAPage;
+import nl.clockwork.ebms.admin.web.cpa.CPAsPage;
+
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.data.DataView;
+import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 public class ViewCPATemplatesPage extends BasePage
 {
 	private static final long serialVersionUID = 1L;
+	@SpringBean(name="cpaPluginDAO")
+	private CPAPluginDAO cpaPluginDAO;
+	@SpringBean(name="maxItemsPerPage")
+	private Integer maxItemsPerPage;
+
+	public ViewCPATemplatesPage()
+	{
+		final WebMarkupContainer container = new WebMarkupContainer("container");
+		container.setOutputMarkupId(true);
+
+		DataView<CPATemplate> cpaTemplates = new DataView<CPATemplate>("cpaTemplates",new CPATemplateDataProvider(cpaPluginDAO))
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public long getItemsPerPage()
+			{
+				return maxItemsPerPage;
+			}
+
+			@Override
+			protected void populateItem(final Item<CPATemplate> item)
+			{
+				final CPATemplate cpaTemplate = item.getModelObject();
+				Link<Void> link = new Link<Void>("view")
+				{
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public void onClick()
+					{
+						//setResponsePage(new CPAPage(ebMSDAO.getCPA(cpa.getId(),CPAsPage.this)));
+						setResponsePage(new ViewCPATemplatePage(cpaTemplate,ViewCPATemplatesPage.this));
+					}
+				};
+				link.add(new Label("name",cpaTemplate.getName()));
+				item.add(link);
+				item.add(AttributeModifier.replace("class",new AbstractReadOnlyModel<String>()
+				{
+					private static final long serialVersionUID = 1L;
+				
+					@Override
+					public String getObject()
+					{
+						return (item.getIndex() % 2 == 0) ? "even" : "odd";
+					}
+				}));
+			}
+		};
+	}
 
 	@Override
 	public String getPageTitle()

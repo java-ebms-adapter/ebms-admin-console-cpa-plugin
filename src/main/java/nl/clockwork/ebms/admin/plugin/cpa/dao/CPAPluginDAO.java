@@ -20,11 +20,12 @@ import java.util.List;
 import nl.clockwork.ebms.admin.plugin.cpa.model.CPAElement;
 import nl.clockwork.ebms.admin.plugin.cpa.model.CPATemplate;
 
-public interface EbMSDAO
+public interface CPAPluginDAO
 {
 	CPATemplate findCPATemplate(long id);
+	CPATemplate findCPATemplateByName(String name);
 	int countCPATemplates();
-	List<CPATemplate> selectCPATemplates();
+	List<String> selectCPAIds();
 	List<CPATemplate> selectCPATemplates(long first, long count);
 
 	List<CPAElement> selectCPAElements(long cpaTemplateId);

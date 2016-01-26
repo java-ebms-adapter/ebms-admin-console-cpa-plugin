@@ -1,7 +1,7 @@
 CREATE TABLE cpa_template
 (
 	id						INT						NOT NULL PRIMARY KEY,
-	cpa_id				VARCHAR(256)	NOT NULL
+	name					VARCHAR(256)	NOT NULL UNIQUE,
 	cpa_template	CLOB					NOT NULL
 );
 

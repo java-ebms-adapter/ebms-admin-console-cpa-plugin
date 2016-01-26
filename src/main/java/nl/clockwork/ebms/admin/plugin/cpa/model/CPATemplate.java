@@ -21,13 +21,13 @@ public class CPATemplate implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 	private long id;
-	private String cpaId;
-	private String cpa;
-	public CPATemplate(long id, String cpaId, String cpa)
+	private String name;
+	private String cpaTemplate;
+	public CPATemplate(long id, String name, String cpaTemplate)
 	{
 		this.id = id;
-		this.cpaId = cpaId;
-		this.cpa = cpa;
+		this.name = name;
+		this.cpaTemplate = cpaTemplate;
 	}
 	public long getId()
 	{
@@ -37,20 +37,24 @@ public class CPATemplate implements IClusterable
 	{
 		this.id = id;
 	}
-	public String getCpaId()
+	public String getName()
 	{
-		return cpaId;
+		return name;
 	}
-	public void setCpaId(String cpaId)
+	public void setName(String name)
 	{
-		this.cpaId = cpaId;
+		this.name = name;
 	}
-	public String getCpa()
+	public String getCpaTemplate()
 	{
-		return cpa;
+		return cpaTemplate;
 	}
-	public void setCpa(String cpa)
+	public void setCpaTemplate(String cpaTemplate)
 	{
-		this.cpa = cpa;
+		this.cpaTemplate = cpaTemplate;
+	}
+	public static long getSerialversionuid()
+	{
+		return serialVersionUID;
 	}
 }

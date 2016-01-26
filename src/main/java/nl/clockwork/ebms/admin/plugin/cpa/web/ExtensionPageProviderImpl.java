@@ -29,8 +29,9 @@ public class ExtensionPageProviderImpl extends ExtensionPageProvider
 	public List<MenuItem> getMenuItems()
 	{
 		List<MenuItem> result = new ArrayList<MenuItem>();
-		result.add(new MenuLinkItem("cpa_1","register CPA Template",RegisterCPATemplatePage.class));
-		result.add(new MenuLinkItem("cpa_2","create CPA",CreateCPAPage.class));
+		result.add(new MenuLinkItem("cpa_0","View CPA Templates",ViewCPATemplatesPage.class));
+		result.add(new MenuLinkItem("cpa_1","Register CPA Template",RegisterCPATemplatePage.class));
+		result.add(new MenuLinkItem("cpa_2","Create CPA",CreateCPAPage.class));
 		return result;
 	}
 

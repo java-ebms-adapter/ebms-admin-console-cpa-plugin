@@ -27,7 +27,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.transaction.support.TransactionTemplate;
 
-public abstract class AbstractEbMSDAO implements EbMSDAO
+public abstract class AbstractCPAPluginDAO implements CPAPluginDAO
 {
 	public static class CPATemplateRowMapper implements ParameterizedRowMapper<CPATemplate>
 	{
@@ -46,7 +46,7 @@ public abstract class AbstractEbMSDAO implements EbMSDAO
 	protected TransactionTemplate transactionTemplate;
 	protected JdbcTemplate jdbcTemplate;
 
-	public AbstractEbMSDAO(TransactionTemplate transactionTemplate, JdbcTemplate jdbcTemplate)
+	public AbstractCPAPluginDAO(TransactionTemplate transactionTemplate, JdbcTemplate jdbcTemplate)
 	{
 		this.transactionTemplate = transactionTemplate;
 		this.jdbcTemplate = jdbcTemplate;
@@ -71,18 +71,37 @@ public abstract class AbstractEbMSDAO implements EbMSDAO
 	}
 
 	@Override
+	public CPATemplate findCPATemplateByName(String name)
+	{
+		try
+		{
+			return jdbcTemplate.queryForObject(
+				CPATemplateRowMapper.getBaseQuery() +
+				" where name = ?",
+				new CPATemplateRowMapper(),
+				name
+			);
+		}
+		catch (EmptyResultDataAccessException e)
+		{
+			return null;
+		}
+	}
+
+	@Override
 	public int countCPATemplates()
 	{
 		return jdbcTemplate.queryForInt("select count(id) from cpa");
 	}
 	
 	@Override
-	public List<CPATemplate> selectCPATemplates()
+	public List<String> selectCPAIds()
 	{
-		return jdbcTemplate.query(
-			CPATemplateRowMapper.getBaseQuery() +
+		return jdbcTemplate.queryForList(
+			"select cpa_id" +
+			" from cpa" +
 			" order by cpa_id",
-			new CPATemplateRowMapper()
+			String.class
 		);
 	}
 	
@@ -101,10 +120,10 @@ public abstract class AbstractEbMSDAO implements EbMSDAO
 	public List<CPAElement> selectCPAElements(long cpaTemplateId)
 	{
 		return jdbcTemplate.query(
-			" select id, name, xpath_query" +
+			"select id, name, xpath_query" +
 			" from cpa_element" +
 			" where cpa_template_id = ?" +
-			" order by order_nr",
+			" order by order_nr asc",
 			new ParameterizedRowMapper<CPAElement>()
 			{
 				@Override

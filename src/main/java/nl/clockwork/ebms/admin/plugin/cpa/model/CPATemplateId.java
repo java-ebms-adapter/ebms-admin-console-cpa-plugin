@@ -13,24 +13,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.clockwork.ebms.admin.plugin.cpa.web;
+package nl.clockwork.ebms.admin.plugin.cpa.model;
 
-import nl.clockwork.ebms.admin.plugin.cpa.model.CPATemplate;
-import nl.clockwork.ebms.admin.web.BasePage;
+import org.apache.wicket.util.io.IClusterable;
 
-public class ViewCPATemplatePage extends BasePage
+public class CPATemplateId implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
-
-	public ViewCPATemplatePage(CPATemplate cpaTemplate, ViewCPATemplatesPage viewCPATemplatesPage)
+	private long id;
+	private String cpaId;
+	private String cpa;
+	public CPATemplateId(long id, String cpaId, String cpa)
 	{
-		// TODO Auto-generated constructor stub
+		this.id = id;
+		this.cpaId = cpaId;
+		this.cpa = cpa;
 	}
-
-	@Override
-	public String getPageTitle()
+	public long getId()
 	{
-		return getLocalizer().getString("viewCPATemplate",this);
+		return id;
 	}
-
+	public void setId(long id)
+	{
+		this.id = id;
+	}
+	public String getCpaId()
+	{
+		return cpaId;
+	}
+	public void setCpaId(String cpaId)
+	{
+		this.cpaId = cpaId;
+	}
+	public String getCpa()
+	{
+		return cpa;
+	}
+	public void setCpa(String cpa)
+	{
+		this.cpa = cpa;
+	}
 }
