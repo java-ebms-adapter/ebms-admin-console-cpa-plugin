@@ -28,15 +28,13 @@ public class ExtensionProviderImpl extends ExtensionProvider
 	@Override
 	public String getSpringConfigurationFile()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return "classpath:nl/clockwork/ebms/admin/plugin/cpa/applicationContext.xml";
 	}
 
 	@Override
 	public String getHSQLDBFile()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return "/nl/clockwork/ebms/admin/plugin/cpa/hsqldb/hsqldb.sql";
 	}
 
 	@Override
