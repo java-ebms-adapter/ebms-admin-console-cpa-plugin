@@ -23,13 +23,10 @@ import nl.clockwork.ebms.admin.plugin.cpa.model.CPATemplate;
 public interface CPAPluginDAO
 {
 	CPATemplate findCPATemplate(long id);
-	CPATemplate findCPATemplateByName(String name);
 	int countCPATemplates();
-	List<String> selectCPATemplateNames();
 	List<CPATemplate> selectCPATemplates(long first, long count);
-
-	List<CPAElement> selectCPAElements(long cpaTemplateId);
 	void insertCPATemplate(String name, String cpa);
 	int deleteCPATemplate(long id);
 
+	List<CPAElement> selectCPAElements(long cpaTemplateId);
 }

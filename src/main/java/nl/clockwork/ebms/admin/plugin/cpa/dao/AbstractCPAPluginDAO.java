@@ -72,38 +72,9 @@ public abstract class AbstractCPAPluginDAO implements CPAPluginDAO
 	}
 
 	@Override
-	public CPATemplate findCPATemplateByName(String name)
-	{
-		try
-		{
-			return jdbcTemplate.queryForObject(
-				CPATemplateRowMapper.getBaseQuery() +
-				" where name = ?",
-				new CPATemplateRowMapper(),
-				name
-			);
-		}
-		catch (EmptyResultDataAccessException e)
-		{
-			return null;
-		}
-	}
-
-	@Override
 	public int countCPATemplates()
 	{
 		return jdbcTemplate.queryForObject("select count(id) from cpa_template",Integer.class);
-	}
-	
-	@Override
-	public List<String> selectCPATemplateNames()
-	{
-		return jdbcTemplate.queryForList(
-			"select name" +
-			" from cpa_template" +
-			" order by name",
-			String.class
-		);
 	}
 	
 	public abstract String selectCPATemplatesQuery(long first, long count);
@@ -114,25 +85,6 @@ public abstract class AbstractCPAPluginDAO implements CPAPluginDAO
 		return jdbcTemplate.query(
 			selectCPATemplatesQuery(first,count),
 			new CPATemplateRowMapper()
-		);
-	}
-
-	@Override
-	public List<CPAElement> selectCPAElements(long cpaTemplateId)
-	{
-		return jdbcTemplate.query(
-			"select id, name, xpath_query" +
-			" from cpa_element" +
-			" where cpa_template_id = ?" +
-			" order by order_nr asc",
-			new RowMapper<CPAElement>()
-			{
-				@Override
-				public CPAElement mapRow(ResultSet rs, int rowNum) throws SQLException
-				{
-					return new CPAElement(rs.getLong("id"),rs.getString("name"),rs.getString("xpath_query"));
-				}
-			}
 		);
 	}
 
@@ -160,4 +112,24 @@ public abstract class AbstractCPAPluginDAO implements CPAPluginDAO
 			id
 		);
 	}
+
+	@Override
+	public List<CPAElement> selectCPAElements(long cpaTemplateId)
+	{
+		return jdbcTemplate.query(
+			"select id, name, xpath_query" +
+			" from cpa_element" +
+			" where cpa_template_id = ?" +
+			" order by order_nr asc",
+			new RowMapper<CPAElement>()
+			{
+				@Override
+				public CPAElement mapRow(ResultSet rs, int rowNum) throws SQLException
+				{
+					return new CPAElement(rs.getLong("id"),rs.getString("name"),rs.getString("xpath_query"));
+				}
+			}
+		);
+	}
+
 }
