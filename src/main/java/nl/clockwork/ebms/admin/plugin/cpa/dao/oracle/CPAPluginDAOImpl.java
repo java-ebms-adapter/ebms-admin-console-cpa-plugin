@@ -15,10 +15,10 @@
  */
 package nl.clockwork.ebms.admin.plugin.cpa.dao.oracle;
 
+import nl.clockwork.ebms.admin.plugin.cpa.dao.AbstractCPAPluginDAO;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.support.TransactionTemplate;
-
-import nl.clockwork.ebms.admin.plugin.cpa.dao.AbstractCPAPluginDAO;
 
 public class CPAPluginDAOImpl extends AbstractCPAPluginDAO
 {
@@ -31,8 +31,14 @@ public class CPAPluginDAOImpl extends AbstractCPAPluginDAO
 	@Override
 	public String selectCPATemplatesQuery(long first, long count)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return "select * from (" +
+			"select t.*, rownum rn from (" +
+			CPATemplateRowMapper.getBaseQuery() +
+			" order by name" +
+			") t" +
+			" where rownum < " + (first + 1 + count) +
+			") where rn >= " + (first + 1)
+		;
 	}
 
 }
