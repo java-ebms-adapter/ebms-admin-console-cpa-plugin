@@ -15,16 +15,172 @@
  */
 package nl.clockwork.ebms.admin.plugin.cpa.web;
 
+import java.util.List;
+
+import nl.clockwork.ebms.admin.plugin.cpa.dao.CPAPluginDAO;
 import nl.clockwork.ebms.admin.web.BasePage;
+import nl.clockwork.ebms.admin.web.BootstrapFeedbackPanel;
+import nl.clockwork.ebms.admin.web.BootstrapFormComponentFeedbackBorder;
+import nl.clockwork.ebms.admin.web.LocalizedStringResource;
+import nl.clockwork.ebms.admin.web.ResetButton;
+import nl.clockwork.ebms.admin.web.TextField;
+import nl.clockwork.ebms.service.CPAService;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.upload.FileUpload;
+import org.apache.wicket.markup.html.form.upload.FileUploadField;
+import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.io.IClusterable;
 
 public class RegisterCPATemplatePage extends BasePage
 {
 	private static final long serialVersionUID = 1L;
+	protected transient Log logger = LogFactory.getLog(getClass());
+	@SpringBean(name="cpaService")
+	private CPAService cpaService;
+	@SpringBean(name="cpaPluginDAO")
+	private CPAPluginDAO cpaPluginDAO;
+
+	public RegisterCPATemplatePage()
+	{
+		add(new BootstrapFeedbackPanel("feedback"));
+		add(new RegisterCPATemplateForm("form"));
+	}
 
 	@Override
 	public String getPageTitle()
 	{
 		return getLocalizer().getString("registerCPATemplate",this);
+	}
+
+	public class RegisterCPATemplateForm extends Form<RegisterCPATemplateFormModel>
+	{
+		private static final long serialVersionUID = 1L;
+
+		public RegisterCPATemplateForm(String id)
+		{
+			super(id,new CompoundPropertyModel<RegisterCPATemplateFormModel>(new RegisterCPATemplateFormModel()));
+			setMultiPart(true);
+			add(new TextField<String>("name",new LocalizedStringResource("lbl.name",RegisterCPATemplateForm.this)));
+			add(new BootstrapFormComponentFeedbackBorder("cpaFeedback",createCPAFileField("cpaFile")));
+			add(createValidateButton("validate"));
+			add(createUploadButton("upload"));
+			add(new ResetButton("reset",new ResourceModel("cmd.reset"),RegisterCPATemplatePage.class));
+		}
+
+		private FileUploadField createCPAFileField(String id)
+		{
+			FileUploadField result = new FileUploadField(id)
+			{
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public IModel<String> getLabel()
+				{
+					return Model.of(getLocalizer().getString("lbl.cpa",RegisterCPATemplateForm.this));
+				}
+			};
+			result.setRequired(true);
+			return result;
+		}
+
+		private Button createValidateButton(String id)
+		{
+			Button result = new Button(id,new ResourceModel("cmd.validate"))
+			{
+				private static final long serialVersionUID = 1L;
+	
+				@Override
+				public void onSubmit()
+				{
+					try
+					{
+						final List<FileUpload> files = RegisterCPATemplateForm.this.getModelObject().cpaFile;
+						if (files != null && files.size() == 1)
+						{
+							FileUpload file = files.get(0);
+							//String contentType = file.getContentType();
+							//FIXME char encoding
+							cpaService.validateCPA(new String(file.getBytes()));
+						}
+						info(getString("cpa.valid"));
+					}
+					catch (Exception e)
+					{
+						logger.error("",e);
+						error(e.getMessage());
+					}
+				}
+			};
+			return result;
+		}
+
+		private Button createUploadButton(String id)
+		{
+			Button result = new Button(id,new ResourceModel("cmd.upload"))
+			{
+				private static final long serialVersionUID = 1L;
+	
+				@Override
+				public void onSubmit()
+				{
+					try
+					{
+						final List<FileUpload> files = RegisterCPATemplateForm.this.getModelObject().cpaFile;
+						if (files != null && files.size() == 1)
+						{
+							FileUpload file = files.get(0);
+							//String contentType = file.getContentType();
+							//FIXME char encoding
+							cpaPluginDAO.insertCPATemplate(RegisterCPATemplateForm.this.getModelObject().getName(),new String(file.getBytes()));
+						}
+						setResponsePage(new ViewCPATemplatesPage());
+					}
+					catch (Exception e)
+					{
+						logger.error("",e);
+						error(e.getMessage());
+					}
+				}
+			};
+			setDefaultButton(result);
+			return result;
+		}
+	}
+	
+	public class RegisterCPATemplateFormModel implements IClusterable
+	{
+		private static final long serialVersionUID = 1L;
+		private String name;
+		private List<FileUpload> cpaFile;
+
+		public String getName()
+		{
+			return name;
+		}
+
+		public void setName(String name)
+		{
+			this.name = name;
+		}
+
+		public List<FileUpload> getCpaFile()
+		{
+			return cpaFile;
+		}
+		
+		public void setCpaFile(List<FileUpload> cpaFile)
+		{
+			this.cpaFile = cpaFile;
+		}
+		
 	}
 
 }

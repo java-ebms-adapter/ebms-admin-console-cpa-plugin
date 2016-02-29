@@ -21,25 +21,26 @@ import java.util.List;
 
 import nl.clockwork.ebms.admin.plugin.cpa.model.CPAElement;
 import nl.clockwork.ebms.admin.plugin.cpa.model.CPATemplate;
+import nl.clockwork.ebms.dao.DAOException;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.transaction.support.TransactionTemplate;
 
 public abstract class AbstractCPAPluginDAO implements CPAPluginDAO
 {
-	public static class CPATemplateRowMapper implements ParameterizedRowMapper<CPATemplate>
+	public static class CPATemplateRowMapper implements RowMapper<CPATemplate>
 	{
 		public static String getBaseQuery()
 		{
-			return "select id, cpa_id, cpa from cpa";
+			return "select id, name, content from cpa_template";
 		}
 
 		@Override
 		public CPATemplate mapRow(ResultSet rs, int rowNum) throws SQLException
 		{
-			return new CPATemplate(rs.getLong("id"),rs.getString("cpa_id"),rs.getString("cpa"));
+			return new CPATemplate(rs.getLong("id"),rs.getString("name"),rs.getString("content"));
 		}
 	}
 	
@@ -91,16 +92,16 @@ public abstract class AbstractCPAPluginDAO implements CPAPluginDAO
 	@Override
 	public int countCPATemplates()
 	{
-		return jdbcTemplate.queryForInt("select count(id) from cpa");
+		return jdbcTemplate.queryForObject("select count(id) from cpa_template",Integer.class);
 	}
 	
 	@Override
-	public List<String> selectCPAIds()
+	public List<String> selectCPATemplateNames()
 	{
 		return jdbcTemplate.queryForList(
-			"select cpa_id" +
-			" from cpa" +
-			" order by cpa_id",
+			"select name" +
+			" from cpa_template" +
+			" order by name",
 			String.class
 		);
 	}
@@ -124,7 +125,7 @@ public abstract class AbstractCPAPluginDAO implements CPAPluginDAO
 			" from cpa_element" +
 			" where cpa_template_id = ?" +
 			" order by order_nr asc",
-			new ParameterizedRowMapper<CPAElement>()
+			new RowMapper<CPAElement>()
 			{
 				@Override
 				public CPAElement mapRow(ResultSet rs, int rowNum) throws SQLException
@@ -132,6 +133,31 @@ public abstract class AbstractCPAPluginDAO implements CPAPluginDAO
 					return new CPAElement(rs.getLong("id"),rs.getString("name"),rs.getString("xpath_query"));
 				}
 			}
+		);
+	}
+
+	@Override
+	public void insertCPATemplate(String name, String cpa) throws DAOException
+	{
+		jdbcTemplate.update
+		(
+			"insert into cpa_template (" +
+				"name," +
+				"content" +
+			") values (?,?)",
+			name,
+			cpa
+		);
+	}
+	
+	@Override
+	public int deleteCPATemplate(long id)
+	{
+		return jdbcTemplate.update
+		(
+			"delete from cpa_template" +
+			" where id = ?",
+			id
 		);
 	}
 }

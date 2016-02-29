@@ -23,6 +23,7 @@ public class CPATemplate implements IClusterable
 	private long id;
 	private String name;
 	private String content;
+
 	public CPATemplate(long id, String name, String content)
 	{
 		this.id = id;

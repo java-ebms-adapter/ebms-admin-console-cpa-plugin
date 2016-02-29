@@ -15,100 +15,112 @@
  */
 package nl.clockwork.ebms.admin.plugin.cpa.web;
 
-import java.util.Arrays;
-
 import nl.clockwork.ebms.admin.plugin.cpa.dao.CPAPluginDAO;
 import nl.clockwork.ebms.admin.plugin.cpa.model.CPATemplate;
 import nl.clockwork.ebms.admin.web.BasePage;
-import nl.clockwork.ebms.admin.web.BootstrapPagingNavigator;
+import nl.clockwork.ebms.admin.web.BootstrapFeedbackPanel;
+import nl.clockwork.ebms.admin.web.OddOrEvenIndexStringModel;
+import nl.clockwork.ebms.admin.web.PageClassLink;
+import nl.clockwork.ebms.service.CPAService;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
-import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.markup.repeater.data.IDataProvider;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 public class ViewCPATemplatesPage extends BasePage
 {
+	private class CPATemplateDataView extends DataView<CPATemplate>
+	{
+		private static final long serialVersionUID = 1L;
+
+		protected CPATemplateDataView(String id, IDataProvider<CPATemplate> dataProvider)
+		{
+			super(id,dataProvider);
+			setOutputMarkupId(true);
+		}
+
+		@Override
+		public long getItemsPerPage()
+		{
+			return maxItemsPerPage;
+		}
+
+		@Override
+		protected void populateItem(final Item<CPATemplate> item)
+		{
+			final CPATemplate cpaTemplate = item.getModelObject();
+			item.add(createViewLink(cpaTemplate));
+			item.add(new DownloadCPATemplateLink("downloadCPATemplate",cpaTemplate));
+			item.add(createDeleteButton("delete"));
+			item.add(AttributeModifier.replace("class",new OddOrEvenIndexStringModel(item.getIndex())));
+		}
+
+		private Link<Void> createViewLink(final CPATemplate cpaTemplate)
+		{
+			Link<Void> link = new Link<Void>("view")
+			{
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void onClick()
+				{
+					setResponsePage(new ViewCPATemplatePage(cpaTemplate,ViewCPATemplatesPage.this));
+				}
+			};
+			link.add(new Label("name",cpaTemplate.getName()));
+			return link;
+		}
+
+		private Button createDeleteButton(String id)
+		{
+			Button result = new Button(id,new ResourceModel("cmd.delete"))
+			{
+				private static final long serialVersionUID = 1L;
+	
+				@Override
+				public void onSubmit()
+				{
+					try
+					{
+						CPATemplate cpaTemplate = (CPATemplate)getParent().getDefaultModelObject();
+						cpaPluginDAO.deleteCPATemplate(cpaTemplate.getId());
+						setResponsePage(new ViewCPATemplatesPage());
+					}
+					catch (Exception e)
+					{
+						logger.error("",e);
+						error(e.getMessage());
+					}
+				}
+			};
+			result.add(AttributeModifier.replace("onclick","return confirm('" + getLocalizer().getString("confirm",this) + "');"));
+			return result;
+		}
+
+	}
 	private static final long serialVersionUID = 1L;
+	private Log logger = LogFactory.getLog(this.getClass());
 	@SpringBean(name="cpaPluginDAO")
 	private CPAPluginDAO cpaPluginDAO;
+	@SpringBean(name="cpaService")
+	private CPAService cpaService;
 	@SpringBean(name="maxItemsPerPage")
 	private Integer maxItemsPerPage;
 
 	public ViewCPATemplatesPage()
 	{
-		final WebMarkupContainer container = new WebMarkupContainer("container");
-		container.setOutputMarkupId(true);
-
-		DataView<CPATemplate> cpaTemplates = new DataView<CPATemplate>("cpaTemplates",new CPATemplateDataProvider(cpaPluginDAO))
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public long getItemsPerPage()
-			{
-				return maxItemsPerPage;
-			}
-
-			@Override
-			protected void populateItem(final Item<CPATemplate> item)
-			{
-				final CPATemplate cpaTemplate = item.getModelObject();
-				Link<Void> link = new Link<Void>("view")
-				{
-					private static final long serialVersionUID = 1L;
-
-					@Override
-					public void onClick()
-					{
-						//setResponsePage(new CPAPage(ebMSDAO.getCPA(cpa.getId(),CPAsPage.this)));
-						setResponsePage(new ViewCPATemplatePage(cpaTemplate,ViewCPATemplatesPage.this));
-					}
-				};
-				link.add(new Label("name",cpaTemplate.getName()));
-				item.add(link);
-				item.add(AttributeModifier.replace("class",new AbstractReadOnlyModel<String>()
-				{
-					private static final long serialVersionUID = 1L;
-				
-					@Override
-					public String getObject()
-					{
-						return (item.getIndex() % 2 == 0) ? "even" : "odd";
-					}
-				}));
-			}
-		};
-		cpaTemplates.setOutputMarkupId(true);
-		container.add(cpaTemplates);
-
-		add(container);
-
-		final BootstrapPagingNavigator navigator = new BootstrapPagingNavigator("navigator",cpaTemplates);
-		add(navigator);
-
-		DropDownChoice<Integer> maxItemsPerPage = new DropDownChoice<Integer>("maxItemsPerPage",new PropertyModel<Integer>(this,"maxItemsPerPage"),Arrays.asList(5,10,15,20,25,50,100));
-		add(maxItemsPerPage);
-		maxItemsPerPage.add(new AjaxFormComponentUpdatingBehavior("onchange")
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onUpdate(AjaxRequestTarget target)
-			{
-				target.add(navigator);
-				target.add(container);
-			}
-			
-		});
+		add(new BootstrapFeedbackPanel("feedback"));
+		add(new ViewCPATemplatesForm("form"));
 	}
 
 	@Override
@@ -117,4 +129,18 @@ public class ViewCPATemplatesPage extends BasePage
 		return getLocalizer().getString("viewCPATemplates",this);
 	}
 
+	public class ViewCPATemplatesForm extends Form<Void>
+	{
+		private static final long serialVersionUID = 1L;
+
+		public ViewCPATemplatesForm(String id)
+		{
+			super(id);
+			WebMarkupContainer container = new WebMarkupContainer("container");
+			add(container);
+			container.add(new CPATemplateDataView("cpaTemplates",new CPATemplateDataProvider(cpaPluginDAO)));
+			add(new PageClassLink("new",RegisterCPATemplatePage.class));
+		}
+	}
+	
 }

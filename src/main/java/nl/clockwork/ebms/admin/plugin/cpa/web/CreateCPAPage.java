@@ -17,9 +17,17 @@ package nl.clockwork.ebms.admin.plugin.cpa.web;
 
 import nl.clockwork.ebms.admin.web.BasePage;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class CreateCPAPage extends BasePage
 {
 	private static final long serialVersionUID = 1L;
+	protected transient Log logger = LogFactory.getLog(getClass());
+
+	public CreateCPAPage()
+	{
+	}
 
 	@Override
 	public String getPageTitle()

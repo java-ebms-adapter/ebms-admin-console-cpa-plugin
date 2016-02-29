@@ -24,18 +24,16 @@ public class CPATemplateDataModel extends LoadableDetachableModel<CPATemplate>
 {
 	private static final long serialVersionUID = 1L;
 	private CPAPluginDAO cpaPluginDAO;
-	private final String name;
+	private final long id;
 
 	public CPATemplateDataModel(CPAPluginDAO ebMSDAO, CPATemplate cpaTemplate)
 	{
-		this(ebMSDAO,cpaTemplate.getName());
+		this(ebMSDAO,cpaTemplate.getId());
 	}
-	public CPATemplateDataModel(CPAPluginDAO cpaPluginDAO, String name)
+	public CPATemplateDataModel(CPAPluginDAO cpaPluginDAO, long id)
 	{
-		if (name == null || "".equals(name))
-			throw new IllegalArgumentException("name is empty!");
 		this.cpaPluginDAO = cpaPluginDAO;
-		this.name = name;
+		this.id = id;
 	}
 
 	protected CPAPluginDAO getCpaPluginDAO()
@@ -46,13 +44,13 @@ public class CPATemplateDataModel extends LoadableDetachableModel<CPATemplate>
 	@Override
 	protected CPATemplate load()
 	{
-		return getCpaPluginDAO().findCPATemplateByName(name);
+		return getCpaPluginDAO().findCPATemplate(id);
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return name.hashCode();
+		return new Long(id).hashCode();
 	}
 
 	@Override
@@ -65,7 +63,7 @@ public class CPATemplateDataModel extends LoadableDetachableModel<CPATemplate>
 		else if (obj instanceof CPATemplateDataModel)
 		{
 			CPATemplateDataModel other = (CPATemplateDataModel)obj;
-			return name.equals(other.name);
+			return id == other.id;
 		}
 		return false;
 	}
