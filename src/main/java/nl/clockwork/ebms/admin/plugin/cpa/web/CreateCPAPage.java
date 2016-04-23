@@ -20,6 +20,7 @@ import java.security.KeyException;
 import java.security.cert.CertificateException;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.xml.crypto.MarshalException;
 import javax.xml.xpath.XPath;
@@ -36,16 +37,18 @@ import nl.clockwork.ebms.admin.web.BootstrapFormComponentFeedbackBorder;
 import nl.clockwork.ebms.admin.web.LocalizedStringResource;
 import nl.clockwork.ebms.admin.web.ResetButton;
 import nl.clockwork.ebms.admin.web.TextField;
-import nl.clockwork.ebms.admin.web.service.cpa.CPAsPage;
 import nl.clockwork.ebms.common.util.DOMUtils;
 import nl.clockwork.ebms.service.CPAService;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -104,7 +107,7 @@ public class CreateCPAPage extends BasePage
 			add(new BootstrapFormComponentFeedbackBorder("startDateFeedback",new BootstrapDateTimePicker("startDate",new LocalizedStringResource("lbl.startDate",CreateCPAForm.this),"dd-MM-yyyy",BootstrapDateTimePicker.Type.DATE).setRequired(true)));
 			add(new BootstrapFormComponentFeedbackBorder("endDateFeedback",new BootstrapDateTimePicker("endDate",new LocalizedStringResource("lbl.endDate",CreateCPAForm.this),"dd-MM-yyyy",BootstrapDateTimePicker.Type.DATE).setRequired(true)));
 			add(new BootstrapFormComponentFeedbackBorder("partyNameFeedback",new TextField<String>("partyName",new LocalizedStringResource("lbl.partyName",CreateCPAForm.this)).setRequired(true)));
-			add(new BootstrapFormComponentFeedbackBorder("partyIdFeedback",new TextField<String>("partyId",new LocalizedStringResource("lbl.partyId",CreateCPAForm.this)).setRequired(true)));
+			add(new BootstrapFormComponentFeedbackBorder("partyIdFeedback",createPartyIdTextField("partyId")));
 			add(new BootstrapFormComponentFeedbackBorder("urlFeedback",new TextField<String>("url",new LocalizedStringResource("lbl.url",CreateCPAForm.this)).setRequired(true)));
 			add(new BootstrapFormComponentFeedbackBorder("clientCertificateFileFeedback",createCertificateFileField("clientCertificateFile","lbl.clientCertificateFile")));
 			//ClientCertificate
@@ -128,7 +131,73 @@ public class CreateCPAPage extends BasePage
 				}
 			};
 			result.setRequired(true);
+			result.add(new AjaxFormComponentUpdatingBehavior("onchange")
+			{
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				protected void onUpdate(AjaxRequestTarget target)
+				{
+					try
+					{
+						CreateCPAFormModel model = CreateCPAForm.this.getModelObject();
+						if (model.getCpaTemplate() != null)
+						{
+							Document document = DOMUtils.read(model.getCpaTemplate().getContent());
+							XPath xpath = Utils.createXPath();
+							generateCPAId(model,document,xpath);
+						}
+						target.add(getPage().get("feedback"));
+						target.add(getPage().get("form"));
+					}
+					catch (Exception e)
+					{
+						logger.error("",e);
+						error(e.getMessage());
+					}
+				}
+			});
 			return result;
+		}
+
+		private FormComponent<String> createPartyIdTextField(String id)
+		{
+			FormComponent<String> result = new TextField<String>(id,new LocalizedStringResource("lbl.partyId",CreateCPAForm.this));
+			result.setRequired(true);
+			result.add(new AjaxFormComponentUpdatingBehavior("onchange")
+			{
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				protected void onUpdate(AjaxRequestTarget target)
+				{
+					try
+					{
+						CreateCPAFormModel model = CreateCPAForm.this.getModelObject();
+						if (model.getCpaTemplate() != null)
+						{
+							Document document = DOMUtils.read(model.getCpaTemplate().getContent());
+							XPath xpath = Utils.createXPath();
+							generateCPAId(model,document,xpath);
+						}
+						target.add(getPage().get("feedback"));
+						target.add(getPage().get("form"));
+					}
+					catch (Exception e)
+					{
+						logger.error("",e);
+						error(e.getMessage());
+					}
+				}
+			});
+			return result;
+		}
+
+		private void generateCPAId(CreateCPAFormModel model, Document document, XPath xpath) throws XPathExpressionException
+		{
+			String cpaId = (String)xpath.evaluate("/cpa:CollaborationProtocolAgreement/@cpa:cpaid",document,XPathConstants.STRING);
+			String fromPartyId = (String)xpath.evaluate("/cpa:CollaborationProtocolAgreement/cpa:PartyInfo[1]/cpa:PartyId/text()",document,XPathConstants.STRING);
+			model.setCpaId(cpaId + "_" + (fromPartyId != null ? fromPartyId + "_" : "") + (model.partyId != null ? model.partyId + "_" : "") + UUID.randomUUID());
 		}
 
 		private FileUploadField createCertificateFileField(String id, final String label)
