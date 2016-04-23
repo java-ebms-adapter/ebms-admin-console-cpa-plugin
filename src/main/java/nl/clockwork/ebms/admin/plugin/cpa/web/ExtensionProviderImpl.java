@@ -38,6 +38,12 @@ public class ExtensionProviderImpl extends ExtensionProvider
 	}
 
 	@Override
+	public String getName()
+	{
+		return "CPA Plugin";
+	}
+
+	@Override
 	public List<MenuItem> getMenuItems()
 	{
 		List<MenuItem> result = new ArrayList<MenuItem>();

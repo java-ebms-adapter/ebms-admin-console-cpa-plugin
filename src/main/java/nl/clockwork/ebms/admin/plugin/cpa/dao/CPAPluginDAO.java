@@ -24,6 +24,7 @@ public interface CPAPluginDAO
 {
 	CPATemplate findCPATemplate(long id);
 	int countCPATemplates();
+	List<CPATemplate> selectCPATemplates();
 	List<CPATemplate> selectCPATemplates(long first, long count);
 	void insertCPATemplate(String name, String cpa);
 	int deleteCPATemplate(long id);

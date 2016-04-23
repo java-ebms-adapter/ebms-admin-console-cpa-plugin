@@ -77,6 +77,16 @@ public abstract class AbstractCPAPluginDAO implements CPAPluginDAO
 		return jdbcTemplate.queryForObject("select count(id) from cpa_template",Integer.class);
 	}
 	
+	@Override
+	public List<CPATemplate> selectCPATemplates()
+	{
+		return jdbcTemplate.query(
+			CPATemplateRowMapper.getBaseQuery() +
+			" order by name",
+			new CPATemplateRowMapper()
+		);
+	}
+
 	public abstract String selectCPATemplatesQuery(long first, long count);
 	
 	@Override

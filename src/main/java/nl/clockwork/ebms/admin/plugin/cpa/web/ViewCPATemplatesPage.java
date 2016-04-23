@@ -21,7 +21,6 @@ import nl.clockwork.ebms.admin.web.BasePage;
 import nl.clockwork.ebms.admin.web.BootstrapFeedbackPanel;
 import nl.clockwork.ebms.admin.web.OddOrEvenIndexStringModel;
 import nl.clockwork.ebms.admin.web.PageClassLink;
-import nl.clockwork.ebms.service.CPAService;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -112,8 +111,6 @@ public class ViewCPATemplatesPage extends BasePage
 	private Log logger = LogFactory.getLog(this.getClass());
 	@SpringBean(name="cpaPluginDAO")
 	private CPAPluginDAO cpaPluginDAO;
-	@SpringBean(name="cpaService")
-	private CPAService cpaService;
 	@SpringBean(name="maxItemsPerPage")
 	private Integer maxItemsPerPage;
 
