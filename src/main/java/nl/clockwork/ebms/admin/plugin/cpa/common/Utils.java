@@ -9,6 +9,7 @@ import java.security.KeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -87,8 +88,9 @@ public class Utils
 	public static void generateKeyInfo(Node node, InputStream is) throws CertificateException, KeyException, MarshalException
 	{
     KeyInfoFactory kif = XMLSignatureFactory.getInstance("DOM").getKeyInfoFactory();
-    Certificate certificate = CertificateFactory.getInstance("X.509").generateCertificate(is);
-    KeyInfo keyInfo = kif.newKeyInfo(Arrays.asList(kif.newKeyValue(certificate.getPublicKey()),kif.newX509Data(Collections.singletonList(certificate))));
+    X509Certificate certificate = (X509Certificate)CertificateFactory.getInstance("X.509").generateCertificate(is);
+    //KeyInfo keyInfo = kif.newKeyInfo(Arrays.asList(kif.newKeyValue(certificate.getPublicKey()),kif.newX509Data(Collections.singletonList(certificate))));
+    KeyInfo keyInfo = kif.newKeyInfo(Arrays.asList(kif.newKeyValue(certificate.getPublicKey()),kif.newX509Data(Arrays.asList(certificate.getSubjectX500Principal().toString(),kif.newX509IssuerSerial(certificate.getIssuerX500Principal().toString(),certificate.getSerialNumber()),certificate))));
     DOMStructure dom = new DOMStructure(node);
     keyInfo.marshal(dom,null);
 	}
@@ -107,8 +109,8 @@ public class Utils
     KeyInfoFactory kif = XMLSignatureFactory.getInstance("DOM").getKeyInfoFactory();
 
     InputStream fis = new FileInputStream("/home/edwin/ebms/ebms-adapter-mule3/resources/CPAs/keystore.cer");
-    Certificate certificate = CertificateFactory.getInstance("X.509").generateCertificate(fis);
-    KeyInfo keyInfo = kif.newKeyInfo(Arrays.asList(kif.newKeyValue(certificate.getPublicKey()),kif.newX509Data(Collections.singletonList(certificate))));
+    X509Certificate certificate = (X509Certificate)CertificateFactory.getInstance("X.509").generateCertificate(fis);
+    KeyInfo keyInfo = kif.newKeyInfo(Arrays.asList(kif.newKeyValue(certificate.getPublicKey()),kif.newX509Data(Arrays.asList(certificate.getSubjectX500Principal().toString(),kif.newX509IssuerSerial(certificate.getIssuerX500Principal().toString(),certificate.getSerialNumber()),certificate))));
 
     DOMStructure dom = new DOMStructure(document.getFirstChild());
     keyInfo.marshal(dom,null);
