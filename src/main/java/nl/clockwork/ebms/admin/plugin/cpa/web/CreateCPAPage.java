@@ -58,9 +58,7 @@ import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.io.IClusterable;
@@ -122,16 +120,8 @@ public class CreateCPAPage extends BasePage
 
 		private DropDownChoice<CPATemplate> createCPATemplateChoice(String id)
 		{
-			DropDownChoice<CPATemplate> result = new DropDownChoice<CPATemplate>(id,new LoadableDetachableCPATemplatesModel(),new ChoiceRenderer<CPATemplate>("name","id"))
-			{
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public IModel<String> getLabel()
-				{
-					return Model.of(getLocalizer().getString("lbl.cpaTemplate",CreateCPAForm.this));
-				}
-			};
+			DropDownChoice<CPATemplate> result = new DropDownChoice<CPATemplate>(id,new LoadableDetachableCPATemplatesModel(),new ChoiceRenderer<CPATemplate>("name","id"));
+			result.setLabel(new ResourceModel("lbl.cpaTemplate"));
 			result.setRequired(true);
 			result.add(new AjaxFormComponentUpdatingBehavior("onchange")
 			{
@@ -230,16 +220,8 @@ public class CreateCPAPage extends BasePage
 
 		private FileUploadField createCertificateFileField(String id, final String label)
 		{
-			FileUploadField result = new FileUploadField(id)
-			{
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public IModel<String> getLabel()
-				{
-					return Model.of(label);
-				}
-			};
+			FileUploadField result = new FileUploadField(id);
+			result.setLabel(new ResourceModel(label));
 			result.setRequired(true);
 			return result;
 		}

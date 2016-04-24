@@ -33,8 +33,6 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.io.IClusterable;
@@ -77,16 +75,8 @@ public class RegisterCPATemplatePage extends BasePage
 
 		private FileUploadField createCPAFileField(String id)
 		{
-			FileUploadField result = new FileUploadField(id)
-			{
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public IModel<String> getLabel()
-				{
-					return Model.of(getLocalizer().getString("lbl.cpa",RegisterCPATemplateForm.this));
-				}
-			};
+			FileUploadField result = new FileUploadField(id);
+			result.setLabel(new ResourceModel("lbl.cpa"));
 			result.setRequired(true);
 			return result;
 		}
