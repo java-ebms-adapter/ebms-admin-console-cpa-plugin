@@ -1,0 +1,6 @@
+CREATE TABLE cpa_template
+(
+	id			INT						AUTO_INCREMENT PRIMARY KEY,
+	name		VARCHAR(256)	NOT NULL UNIQUE,
+	content	MEDIUMTEXT		NOT NULL
+);
