@@ -45,8 +45,10 @@ import nl.clockwork.ebms.service.CPAService;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
@@ -107,13 +109,13 @@ public class CreateCPAPage extends BasePage
 			super(id,new CompoundPropertyModel<CreateCPAFormModel>(new CreateCPAFormModel()));
 			setMultiPart(true);
 			add(new BootstrapFormComponentFeedbackBorder("cpaTemplateFeedback",createCPATemplateChoice("cpaTemplate")));
-			add(new BootstrapFormComponentFeedbackBorder("cpaIdFeedback",new TextField<String>("cpaId",new LocalizedStringResource("lbl.cpaId",CreateCPAForm.this)).setRequired(true)));
+			add(new BootstrapFormComponentFeedbackBorder("cpaIdFeedback",new TextField<String>("cpaId",new LocalizedStringResource("lbl.cpaId",CreateCPAForm.this)).setRequired(true)).setOutputMarkupId(true));
 			add(new BootstrapFormComponentFeedbackBorder("startDateFeedback",new BootstrapDateTimePicker("startDate",new LocalizedStringResource("lbl.startDate",CreateCPAForm.this),"dd-MM-yyyy",BootstrapDateTimePicker.Type.DATE).setRequired(true)));
 			add(new BootstrapFormComponentFeedbackBorder("endDateFeedback",new BootstrapDateTimePicker("endDate",new LocalizedStringResource("lbl.endDate",CreateCPAForm.this),"dd-MM-yyyy",BootstrapDateTimePicker.Type.DATE).setRequired(true)));
 			add(new BootstrapFormComponentFeedbackBorder("partyNameFeedback",new TextField<String>("partyName",new LocalizedStringResource("lbl.partyName",CreateCPAForm.this)).setRequired(true)));
 			add(new BootstrapFormComponentFeedbackBorder("partyIdFeedback",createPartyIdTextField("partyId")));
 			add(new BootstrapFormComponentFeedbackBorder("urlFeedback",new TextField<String>("url",new LocalizedStringResource("lbl.url",CreateCPAForm.this)).setRequired(true)));
-			add(createCertificatesListView("certificates"));
+			add(createCertificatesContainer("certificatesContainer"));
 			add(createGenerateButton("generate"));
 			add(new ResetButton("reset",new ResourceModel("cmd.reset"),CreateCPAPage.class));
 		}
@@ -141,7 +143,8 @@ public class CreateCPAPage extends BasePage
 							addCertificateFiles(model,document,xpath);
 						}
 						target.add(getPage().get("feedback"));
-						target.add(getPage().get("form"));
+						target.add(getPage().get("form:cpaIdFeedback"));
+						target.add(getPage().get("form:certificatesContainer"));
 					}
 					catch (Exception e)
 					{
@@ -173,8 +176,7 @@ public class CreateCPAPage extends BasePage
 							XPath xpath = Utils.createXPath();
 							generateCPAId(model,document,xpath);
 						}
-						target.add(getPage().get("feedback"));
-						target.add(getPage().get("form"));
+						target.add(getPage().get("form:cpaIdFeedback"));
 					}
 					catch (Exception e)
 					{
@@ -201,9 +203,10 @@ public class CreateCPAPage extends BasePage
 				model.getCertificates().add(new Certificate(nodeList.item(i).getNodeValue()));
 		}
 
-		private ListView<Certificate> createCertificatesListView(String id)
+		private WebMarkupContainer createCertificatesContainer(String id)
 		{
-			ListView<Certificate> result = new ListView<Certificate>(id,CreateCPAForm.this.getModelObject().certificates)
+			WebMarkupContainer result = new WebMarkupContainer(id);
+			ListView<Certificate> certificates = new ListView<Certificate>("certificates",CreateCPAForm.this.getModelObject().certificates)
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -215,6 +218,8 @@ public class CreateCPAPage extends BasePage
 					item.add(new BootstrapFormComponentFeedbackBorder("fileFeedback",createCertificateFileField("file",item.getModelObject().getId())));
 				}
 			};
+			result.add(certificates);
+			result.setOutputMarkupId(true);
 			return result;
 		}
 
