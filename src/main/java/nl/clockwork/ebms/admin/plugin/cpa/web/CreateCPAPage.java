@@ -301,7 +301,6 @@ public class CreateCPAPage extends BasePage
 		private String partyId;
 		private String url;
 		private List<Certificate> certificates = new ArrayList<Certificate>();
-		private List<FileUpload> clientCertificateFile;
 
 		public CPATemplate getCpaTemplate()
 		{
@@ -366,14 +365,6 @@ public class CreateCPAPage extends BasePage
 		public void setCertificates(List<Certificate> certificates)
 		{
 			this.certificates = certificates;
-		}
-		public List<FileUpload> getClientCertificateFile()
-		{
-			return clientCertificateFile;
-		}
-		public void setClientCertificateFile(List<FileUpload> clientCertificateFile)
-		{
-			this.clientCertificateFile = clientCertificateFile;
 		}
 	}
 }
