@@ -42,10 +42,19 @@
 				<input type="text" class="form-control" wicket:id="partyId"/>
 			</div>
 		</div>
-		<div class="form-group" wicket:id="urlFeedback">
-			<label wicket:for="url" class="col-lg-2 control-label"><wicket:label/></label>
+		<div class="form-group" wicket:id="urlsContainer">
+			<label class="col-lg-2 control-label"><wicket:message key="lbl.urls"/></label>
 			<div class="col-lg-10">
-				<input type="text" class="form-control" wicket:id="url"/>
+				<table class="table table-striped">
+					<tr wicket:id="urls">
+						<td>
+							<p class="form-control-static"><wicket:container wicket:id="transportId"/></p>
+						</td>
+						<td>
+							<div wicket:id="urlFeedback"><input type="text" class="form-control" wicket:id="url"/></div>
+						</td>
+					</tr>
+				</table>
 			</div>
 		</div>
 		<div class="form-group" wicket:id="certificatesContainer">

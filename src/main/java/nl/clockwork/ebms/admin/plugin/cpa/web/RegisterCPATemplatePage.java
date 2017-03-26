@@ -21,15 +21,14 @@ import nl.clockwork.ebms.admin.plugin.cpa.dao.CPAPluginDAO;
 import nl.clockwork.ebms.admin.web.BasePage;
 import nl.clockwork.ebms.admin.web.BootstrapFeedbackPanel;
 import nl.clockwork.ebms.admin.web.BootstrapFormComponentFeedbackBorder;
-import nl.clockwork.ebms.admin.web.LocalizedStringResource;
 import nl.clockwork.ebms.admin.web.ResetButton;
-import nl.clockwork.ebms.admin.web.TextField;
 import nl.clockwork.ebms.service.CPAService;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -66,7 +65,7 @@ public class RegisterCPATemplatePage extends BasePage
 		{
 			super(id,new CompoundPropertyModel<RegisterCPATemplateFormModel>(new RegisterCPATemplateFormModel()));
 			setMultiPart(true);
-			add(new TextField<String>("name",new LocalizedStringResource("lbl.name",RegisterCPATemplateForm.this)));
+			add(new TextField<String>("name").setLabel(new ResourceModel("lbl.name")));
 			add(new BootstrapFormComponentFeedbackBorder("cpaFeedback",createCPAFileField("cpaFile")));
 			add(createValidateButton("validate"));
 			add(createUploadButton("upload"));
