@@ -20,58 +20,68 @@
 		</div>
 		<div class="form-group" wicket:id="startDateFeedback">
 			<label wicket:for="startDate" class="col-lg-2 control-label"><wicket:label/></label>
-			<div class="col-lg-8">
+			<div class="col-lg-10">
 				<span wicket:id="startDate"/>
 			</div>
 		</div>
 		<div class="form-group" wicket:id="endDateFeedback">
 			<label wicket:for="endDate" class="col-lg-2 control-label"><wicket:label/></label>
-			<div class="col-lg-8">
+			<div class="col-lg-10">
 				<span wicket:id="endDate"/>
 			</div>
 		</div>
-		<div class="form-group" wicket:id="partyNameFeedback">
-			<label wicket:for="partyName" class="col-lg-2 control-label"><wicket:label/></label>
-			<div class="col-lg-10">
-				<input type="text" class="form-control" wicket:id="partyName"/>
-			</div>
-		</div>
-		<div class="form-group" wicket:id="partyIdFeedback">
-			<label wicket:for="partyId" class="col-lg-2 control-label"><wicket:label/></label>
-			<div class="col-lg-10">
-				<input type="text" class="form-control" wicket:id="partyId"/>
-			</div>
-		</div>
-		<div class="form-group" wicket:id="urlsContainer">
-			<label class="col-lg-2 control-label"><wicket:message key="lbl.urls"/></label>
-			<div class="col-lg-10">
-				<table class="table table-striped">
-					<tr wicket:id="urls">
-						<td>
-							<p class="form-control-static"><wicket:container wicket:id="transportId"/></p>
-						</td>
-						<td>
-							<div wicket:id="urlFeedback"><input type="text" class="form-control" wicket:id="url"/></div>
-						</td>
-					</tr>
-				</table>
-			</div>
-		</div>
-		<div class="form-group" wicket:id="certificatesContainer">
-			<label class="col-lg-2 control-label"><wicket:message key="lbl.certificates"/></label>
-			<div class="col-lg-10">
-				<table class="table table-striped">
-					<tr wicket:id="certificates">
-						<td>
-							<p class="form-control-static"><wicket:container wicket:id="id"/></p>
-						</td>
-						<td>
-							<div wicket:id="fileFeedback"><input type="file" class="form-control" id="file" wicket:id="file"/></div>
-						</td>
-					</tr>
-				</table>
-			</div>
-		</div>
+		<wicket:container wicket:id="partyInfosContainer">
+			<wicket:container wicket:id="partyInfos">
+				<div class="form-group">
+					<label wicket:for="enabled" class="col-lg-2 control-label"></label>
+					<div class="col-lg-10">
+						<input type="checkbox" wicket:id="enabled" />
+					</div>
+				</div>
+				<div class="form-group" wicket:id="partyNameFeedback">
+					<label wicket:for="partyName" class="col-lg-2 control-label"><wicket:label/></label>
+					<div class="col-lg-10">
+						<input type="text" class="form-control" wicket:id="partyName"/>
+					</div>
+				</div>
+				<div class="form-group" wicket:id="partyIdFeedback">
+					<label wicket:for="partyId" class="col-lg-2 control-label"><wicket:label/></label>
+					<div class="col-lg-10">
+						<input type="text" class="form-control" wicket:id="partyId"/>
+					</div>
+				</div>
+				<div class="form-group" wicket:id="urlsContainer">
+					<label class="col-lg-2 control-label"><wicket:message key="lbl.urls"/></label>
+					<div class="col-lg-10">
+						<table class="table table-striped">
+							<tr wicket:id="urls">
+								<td>
+									<p class="form-control-static"><wicket:container wicket:id="transportId"/></p>
+								</td>
+								<td>
+									<div wicket:id="urlFeedback"><input type="text" class="form-control" wicket:id="url"/></div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="form-group" wicket:id="certificatesContainer">
+					<label class="col-lg-2 control-label"><wicket:message key="lbl.certificates"/></label>
+					<div class="col-lg-10">
+						<table class="table table-striped">
+							<tr wicket:id="certificates">
+								<td>
+									<p class="form-control-static"><wicket:container wicket:id="id"/></p>
+								</td>
+								<td>
+									<div wicket:id="fileFeedback"><input type="file" class="form-control" id="file" wicket:id="file"/></div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</wicket:container>
+		</wicket:container>
 		<div class="form-group">
 			<div class="col-lg-offset-2 col-lg-10">
 				<input type="submit" class="btn btn-default" wicket:id="generate" wicket:message="value:cmd.generate"/>
