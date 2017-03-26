@@ -285,7 +285,7 @@ public class CreateCPAPage extends BasePage
 					node.setNodeValue(modelObject.partyName);
 					node = (Node)xpath.evaluate("/cpa:CollaborationProtocolAgreement/cpa:PartyInfo[2]/cpa:PartyId/text()",document,XPathConstants.NODE);
 					node.setNodeValue(modelObject.partyId);
-					NodeList nodeList = (NodeList)xpath.evaluate("/cpa:CollaborationProtocolAgreement/cpa:PartyInfo[2]/cpa:Transport/cpa:TransportReceiver/cpa:Endpoint/@cpa:uri",document,XPathConstants.NODESET);
+					NodeList nodeList = (NodeList)xpath.evaluate("/cpa:CollaborationProtocolAgreement/cpa:PartyInfo[2]/cpa:Transport[1]/cpa:TransportReceiver/cpa:Endpoint[1]/@cpa:uri",document,XPathConstants.NODESET);
 					for (int i = 0; i < nodeList.getLength(); i++)
 						nodeList.item(i).setNodeValue(modelObject.url);
 					for (Certificate certificate : modelObject.getCertificates())
@@ -293,8 +293,7 @@ public class CreateCPAPage extends BasePage
 						final List<FileUpload> files = certificate.getFile();
 						if (files != null && files.size() == 1)
 						{
-							node = (Node)xpath.evaluate("/cpa:CollaborationProtocolAgreement/cpa:PartyInfo[2]/cpa:Certificate[1]",document,XPathConstants.NODE);
-							node = (Node)xpath.evaluate("//cpa:Certificate[@cpa:certId = '" + certificate.getId() + "']",document,XPathConstants.NODE);
+							node = (Node)xpath.evaluate("/cpa:CollaborationProtocolAgreement/cpa:PartyInfo[2]//cpa:Certificate[@cpa:certId = '" + certificate.getId() + "']",document,XPathConstants.NODE);
 							Node node1 = (Node)xpath.evaluate("//cpa:Certificate[@cpa:certId = '" + certificate.getId() + "']/xmldsig:KeyInfo",document,XPathConstants.NODE);
 							node.removeChild(node1);
 							Utils.generateKeyInfo(node,files.get(0).getInputStream());
