@@ -138,12 +138,14 @@ public class CreateCPAPage extends BasePage
 						{
 							Document document = DOMUtils.read(model.getCpaTemplate().getContent());
 							XPath xpath = Utils.createXPath();
+							setPartyName(model,document,xpath);
+							setPartyId(model,document,xpath);
+							setUrl(model,document,xpath);
 							generateCPAId(model,document,xpath);
 							addCertificateFiles(model,document,xpath);
 						}
 						target.add(getPage().get("feedback"));
-						target.add(getPage().get("form:cpaIdFeedback"));
-						target.add(getPage().get("form:certificatesContainer"));
+						target.add(getPage().get("form"));
 					}
 					catch (Exception e)
 					{
@@ -151,6 +153,7 @@ public class CreateCPAPage extends BasePage
 						error(e.getMessage());
 					}
 				}
+
 			});
 			return result;
 		}
@@ -185,6 +188,21 @@ public class CreateCPAPage extends BasePage
 				}
 			});
 			return result;
+		}
+
+		private void setPartyName(CreateCPAFormModel model, Document document, XPath xpath) throws XPathExpressionException
+		{
+			model.setPartyName((String)xpath.evaluate("/cpa:CollaborationProtocolAgreement/cpa:PartyInfo[2]/@cpa:partyName",document,XPathConstants.STRING));
+		}
+
+		private void setPartyId(CreateCPAFormModel model, Document document, XPath xpath) throws XPathExpressionException
+		{
+			model.setPartyId((String)xpath.evaluate("/cpa:CollaborationProtocolAgreement/cpa:PartyInfo[2]/cpa:PartyId/text()",document,XPathConstants.STRING));
+		}
+
+		private void setUrl(CreateCPAFormModel model, Document document, XPath xpath) throws XPathExpressionException
+		{
+			model.setUrl((String)xpath.evaluate("/cpa:CollaborationProtocolAgreement/cpa:PartyInfo[2]/cpa:Transport[1]/cpa:TransportReceiver/cpa:Endpoint[1]/@cpa:uri",document,XPathConstants.STRING));
 		}
 
 		private void generateCPAId(CreateCPAFormModel model, Document document, XPath xpath) throws XPathExpressionException
@@ -225,7 +243,7 @@ public class CreateCPAPage extends BasePage
 		private FileUploadField createCertificateFileField(String id, final String label)
 		{
 			FileUploadField result = new FileUploadField(id);
-			result.setLabel(new ResourceModel(label));
+			result.setLabel(new ResourceModel(label,label));
 			result.setRequired(true);
 			return result;
 		}

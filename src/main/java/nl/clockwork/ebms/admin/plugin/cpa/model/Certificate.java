@@ -15,12 +15,14 @@
  */
 package nl.clockwork.ebms.admin.plugin.cpa.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 
-public class Certificate
+public class Certificate implements Serializable
 {
+	private static final long serialVersionUID = 1L;
 	private String id;
 	private List<FileUpload> file;
 
