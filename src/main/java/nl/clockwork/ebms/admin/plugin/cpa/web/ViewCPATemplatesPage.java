@@ -108,7 +108,7 @@ public class ViewCPATemplatesPage extends BasePage
 
 	}
 	private static final long serialVersionUID = 1L;
-	private Log logger = LogFactory.getLog(this.getClass());
+	protected transient Log logger = LogFactory.getLog(this.getClass());
 	@SpringBean(name="cpaPluginDAO")
 	private CPAPluginDAO cpaPluginDAO;
 	@SpringBean(name="maxItemsPerPage")

@@ -258,7 +258,7 @@ public class CreateCPAPage extends BasePage
 					return item.getModelObject().isEnabled();
 				}
 			};
-			ListView<Url> certificates = new ListView<Url>("urls",item.getModelObject().getUrls())
+			ListView<Url> certificates = new ListView<Url>("urls",item.getModelObject().getURLs())
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -332,7 +332,7 @@ public class CreateCPAPage extends BasePage
 						CPATemplate cpaTemplate = CreateCPAForm.this.getModelObject().cpaTemplate;
 						Document document = DOMUtils.read(cpaTemplate.getContent());
 						processDocument(document,CreateCPAForm.this.getModelObject());
-						cpaService.insertCPA(DOMUtils.toString(document),null,false);
+						cpaService.insertCPA(DOMUtils.toString(document),false);
 						setResponsePage(new CPAsPage());
 					}
 					catch (Exception e)
@@ -359,10 +359,10 @@ public class CreateCPAPage extends BasePage
 							node.setNodeValue(partyInfo.getPartyName());
 							node = (Node)xpath.evaluate("/cpa:CollaborationProtocolAgreement/cpa:PartyInfo[" + partyInfo.getId() + "]/cpa:PartyId/text()",document,XPathConstants.NODE);
 							node.setNodeValue(partyInfo.getPartyId());
-							for (Url url: partyInfo.getUrls())
+							for (Url url: partyInfo.getURLs())
 							{
 								node = (Node)xpath.evaluate("/cpa:CollaborationProtocolAgreement/cpa:PartyInfo[" + partyInfo.getId() + "]/cpa:Transport[@cpa:transportId = '" + url.getTransportId() + "']/cpa:TransportReceiver/cpa:Endpoint[1]/@cpa:uri",document,XPathConstants.NODE);
-								node.setNodeValue(url.getUrl());
+								node.setNodeValue(url.getURL());
 							}
 							for (Certificate certificate : partyInfo.getCertificates())
 							{
@@ -394,7 +394,7 @@ public class CreateCPAPage extends BasePage
 				partyInfo.setId(i);
 				partyInfo.setPartyName(getPartyName(i,document,xpath));
 				partyInfo.setPartyId(getPartyId(i,document,xpath));
-				partyInfo.setUrls(getUrls(i,document,xpath));
+				partyInfo.setUrls(getURLs(i,document,xpath));
 				partyInfo.setCertificates(getCertificateFiles(i,document,xpath));
 				model.getPartyInfos().add(partyInfo);
 			}
@@ -425,7 +425,7 @@ public class CreateCPAPage extends BasePage
 			return (String)xpath.evaluate("/cpa:CollaborationProtocolAgreement/cpa:PartyInfo[" + id + "]/cpa:PartyId/text()",document,XPathConstants.STRING);
 		}
 
-		private ArrayList<Url> getUrls(Integer id, Document document, XPath xpath) throws XPathExpressionException
+		private ArrayList<Url> getURLs(Integer id, Document document, XPath xpath) throws XPathExpressionException
 		{
 			ArrayList<Url> result = new ArrayList<Url>();
 			NodeList nodeList = (NodeList)xpath.evaluate("/cpa:CollaborationProtocolAgreement/cpa:PartyInfo[" + id + "]//cpa:Transport/@cpa:transportId",document,XPathConstants.NODESET);

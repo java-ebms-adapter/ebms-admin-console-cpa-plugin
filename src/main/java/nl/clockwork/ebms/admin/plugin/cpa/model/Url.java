@@ -36,7 +36,7 @@ public class Url implements Serializable
 	{
 		this.transportId = transportId;
 	}
-	public String getUrl()
+	public String getURL()
 	{
 		return url;
 	}
