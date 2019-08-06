@@ -11,7 +11,7 @@ deploy:
     - target/cpa-$project_version.zip
   skip_cleanup: true
   on:
-    repo: java-ebms-adapter/cpa
+    repo: java-ebms-adapter/ebms-admin-console-cpa-plugin
     branch: master
   name: "$project_version"
 addons:
@@ -21,4 +21,4 @@ addons:
       secure: "opC2DwYH/wAmJ6L/GOeva/Go1EwKK7qW0iBephuOwpkWQZJJf3gzAIVOuBMxdo79Af5y2pJLsODchK3spqKk4AzIP9Hv2kAAWE/lP0E6UGEkZIhtlOT3qS3sY23dk1nWgmCKgizm9UtKjakJX+WUMVp2tiVwT9l19XFKqH+3bvL7QreirLqfJVWWLAGE1ZZRbbw0lHv6ZJR68UxDb7RKtenaK4AWBFvnICTOIn2pQPFr46lf+83zwOHAx86OZ3L2xyjmnAv34A3H1nm+86tb86YNPgbjTE6qHDA/IgH5lfzYsJA9KydS5wJcc+8yQSIXgoz2MvokfClfOqUtBRgNuUUyrm9OrudP+mjdytxJyMFWsJrjYIFIwQMXLgo4xUkChPhO/h0BTOyw6MAP+mEuy8qDEtWLHD2SrzYj3gXnY823dMRwpekH6PYss7nb33C3o4W80XuFSEy3+u9E8ecRWVjOgpEV1VHoneayrPaoDJFr/0lcOWTcsu2/d+JTst6FMksxst4JTtpmeyhaWaNyBOs3ra7h7MlA22QKf9c7E7BnUYmh9OAT9UIdBU4uMr7j55vet9GYB0JNfEhrSCv8YYZxea7N5NL1KdH3snrxi9VMwf3e5CL4FfDLL0bm9NFZZ3bQytoNG4ZdctgFwL+cYbzmXWn7lAdEjlnS4/JQGNk="
 script:
   # The following command line builds the project, runs the tests with coverage and then executes the SonarCloud analysis
-  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=java-ebms-adapter_cpa
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=java-ebms-adapter_console-cpa-plugin
