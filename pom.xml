@@ -21,7 +21,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>nl.clockwork.ebms.admin.plugin</groupId>
+	<groupId>com.github.java-ebms-adapter</groupId>
 	<artifactId>cpa</artifactId>
 	<packaging>jar</packaging>
 	<version>3.0.0</version>
