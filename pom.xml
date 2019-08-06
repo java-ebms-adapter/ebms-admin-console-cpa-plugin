@@ -25,8 +25,8 @@
 	<artifactId>cpa</artifactId>
 	<packaging>jar</packaging>
 	<version>3.0.0</version>
-	<name>EbMS Admin CPA Plugin</name>
-	<description></description>
+	<name>ebMS Admin Console - CPA Plugin</name>
+	<description>CPA Plugin for the ebMS Admin Console</description>
 	<url>https://sourceforge.net/projects/javaebmsadmin/cpaplugin</url>
 
 	<issueManagement>
@@ -52,6 +52,7 @@
 	<scm>
 		<connection>scm:git:ssh://git.code.sf.net/p/javaebmsadmin/cpaplugin/code</connection>
 	</scm>
+
 	<organization>
 		<name>Ordina</name>
 		<url>www.ordina.nl</url>

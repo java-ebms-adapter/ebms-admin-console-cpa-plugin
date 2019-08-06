@@ -8,7 +8,7 @@ deploy:
   api_key:
     secure: mwbVEdnGxARpwdUJ/dE7nt3fbaD1VOLsCIKDjbt0eC/f6mPsy3nAeV3gtbBDVDCV9MZyCzg91RSU//4AaLpwaGLFMtqPub5WXgvGa202pNa9GVE39tRb9eeNsFugpugg9tvNErvWDxKL11yApwWOeNlnt23Ddv0JUIwRgTpPj4muxQSs3ERmHa5lfe4XJGuDmcG9XVz3zE6Dx0rOO1lbAEy/xwdzPTXom9ogTKKbpIHb/teJMm6tBeMl9pwF97P6bshiPRzSmoGoW3XSpzOpmE4cJZYZQFrgJwuEUUSwx5uT88HmCW9IL83zCo1fr/UeCPoaGz0B6YD50D20Jn9Ltl8+vQiuVRLfScfpBPpDNgsr8FRaY2T6+Do1/o/6x6sXPN7YYyOhZYk3b0XeCNlkn2mIqViJD9nmzBcKtWvbXYERfQXpRbJiz3q0qEeEfP1NJ0zsCb6no77m3fXwUnILoJUv3aFUepAzvDn3FMEgQCAMKjBBWaJGM1VolsHqOFn6kU8PhRHHGesIwhLQLJpNolIwCVXmCik+oso8t75wtaYCUZiej0Enw6nYgi+w9MjdJGLMIDCXXJ5liw+BeNnyuTsEUo9YS8I1JUGVGzAMcj4grsqxPljdcVKfMBi0VDprRWgCYUuHVLKOBS78HXqNAkJBw5c2pGrX8sQdS1sPlr0=
   file:
-    - target/cpa-$project_version.zip
+    - target/cpa-$project_version.jar
   skip_cleanup: true
   on:
     repo: java-ebms-adapter/ebms-admin-console-cpa-plugin
