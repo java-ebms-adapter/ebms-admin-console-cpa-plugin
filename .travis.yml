@@ -1,0 +1,24 @@
+language: java
+jdk: openjdk8
+before_deploy:
+  - mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
+  - export project_version=$(mvn help:evaluate -N -Dexpression=project.version | grep -v '\[')
+deploy:
+  provider: releases
+  api_key:
+    secure: mwbVEdnGxARpwdUJ/dE7nt3fbaD1VOLsCIKDjbt0eC/f6mPsy3nAeV3gtbBDVDCV9MZyCzg91RSU//4AaLpwaGLFMtqPub5WXgvGa202pNa9GVE39tRb9eeNsFugpugg9tvNErvWDxKL11yApwWOeNlnt23Ddv0JUIwRgTpPj4muxQSs3ERmHa5lfe4XJGuDmcG9XVz3zE6Dx0rOO1lbAEy/xwdzPTXom9ogTKKbpIHb/teJMm6tBeMl9pwF97P6bshiPRzSmoGoW3XSpzOpmE4cJZYZQFrgJwuEUUSwx5uT88HmCW9IL83zCo1fr/UeCPoaGz0B6YD50D20Jn9Ltl8+vQiuVRLfScfpBPpDNgsr8FRaY2T6+Do1/o/6x6sXPN7YYyOhZYk3b0XeCNlkn2mIqViJD9nmzBcKtWvbXYERfQXpRbJiz3q0qEeEfP1NJ0zsCb6no77m3fXwUnILoJUv3aFUepAzvDn3FMEgQCAMKjBBWaJGM1VolsHqOFn6kU8PhRHHGesIwhLQLJpNolIwCVXmCik+oso8t75wtaYCUZiej0Enw6nYgi+w9MjdJGLMIDCXXJ5liw+BeNnyuTsEUo9YS8I1JUGVGzAMcj4grsqxPljdcVKfMBi0VDprRWgCYUuHVLKOBS78HXqNAkJBw5c2pGrX8sQdS1sPlr0=
+  file:
+    - target/cpa-$project_version.zip
+  skip_cleanup: true
+  on:
+    repo: java-ebms-adapter/cpa
+    branch: master
+  name: "$project_version"
+addons:
+  sonarcloud:
+    organization: java-ebms-adapter
+    token:
+      secure: "opC2DwYH/wAmJ6L/GOeva/Go1EwKK7qW0iBephuOwpkWQZJJf3gzAIVOuBMxdo79Af5y2pJLsODchK3spqKk4AzIP9Hv2kAAWE/lP0E6UGEkZIhtlOT3qS3sY23dk1nWgmCKgizm9UtKjakJX+WUMVp2tiVwT9l19XFKqH+3bvL7QreirLqfJVWWLAGE1ZZRbbw0lHv6ZJR68UxDb7RKtenaK4AWBFvnICTOIn2pQPFr46lf+83zwOHAx86OZ3L2xyjmnAv34A3H1nm+86tb86YNPgbjTE6qHDA/IgH5lfzYsJA9KydS5wJcc+8yQSIXgoz2MvokfClfOqUtBRgNuUUyrm9OrudP+mjdytxJyMFWsJrjYIFIwQMXLgo4xUkChPhO/h0BTOyw6MAP+mEuy8qDEtWLHD2SrzYj3gXnY823dMRwpekH6PYss7nb33C3o4W80XuFSEy3+u9E8ecRWVjOgpEV1VHoneayrPaoDJFr/0lcOWTcsu2/d+JTst6FMksxst4JTtpmeyhaWaNyBOs3ra7h7MlA22QKf9c7E7BnUYmh9OAT9UIdBU4uMr7j55vet9GYB0JNfEhrSCv8YYZxea7N5NL1KdH3snrxi9VMwf3e5CL4FfDLL0bm9NFZZ3bQytoNG4ZdctgFwL+cYbzmXWn7lAdEjlnS4/JQGNk="
+script:
+  # The following command line builds the project, runs the tests with coverage and then executes the SonarCloud analysis
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=java-ebms-adapter_cpa
